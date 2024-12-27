@@ -5,28 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>내가 나라서 정말 좋아</title>
   <style>
-    .store {
-      margin: 20px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 5px;
-    }
-    .store button {
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .store button:hover {
-      background-color: #0056b3;
-    }
-    .benefit {
-      margin-top: 10px;
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
       color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+    }
+
+    #store-container {
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .store {
+      margin-bottom: 20px;
+    }
+
+    .store button {
+      display: block;
+      width: 100%;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 15px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .store button:hover {
+      background-color: #333;
+      color: #fff;
+      border-color: #333;
+    }
+
+    .benefit {
       font-size: 14px;
+      margin-top: 10px;
+      color: #666;
       display: none;
     }
   </style>
