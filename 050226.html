@@ -1,86 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>엄마마음</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        .link-container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .link {
-            display: block;
-            margin: 10px 0;
-            padding: 10px 20px;
-            background-color: #0073e6;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .link:hover {
-            background-color: #005bb5;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내가 나라서 정말 좋아</title>
+  <style>
+    .store {
+      margin: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .store button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .store button:hover {
+      background-color: #0056b3;
+    }
+    .benefit {
+      margin-top: 10px;
+      color: #333;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <h1>내가 나라서 정말 좋아</h1>
-    <div id="link-container" class="link-container">
-        <!-- Links will be dynamically inserted here -->
-    </div>
+  <div id="store-container"></div>
 
-    <script>
-        // Path to your CSV file
-        const csvFilePath = "./bookstore.csv";
+  <script>
+    // CSV 파일 경로
+    const csvFilePath = './bookstore.csv';
 
-        // Fetch and process the CSV file
-        fetch(csvFilePath)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.text();
-            })
-            .then(csvData => {
-                const parsedData = parseCSV(csvData);
-                createLinks(parsedData);
-            })
-            .catch(error => {
-                console.error("Error loading the CSV file:", error);
-            });
+    // CSV 데이터 파싱 함수
+    async function loadCSV() {
+      const response = await fetch(csvFilePath);
+      const text = await response.text();
+      const rows = text.split('\n').map(row => row.split(','));
+      const headers = rows.shift(); // 첫 번째 줄은 헤더
 
-        // Parse CSV data
-        function parseCSV(csv) {
-            const rows = csv.split("\n").map(row => row.trim()).filter(row => row);
-            const headers = rows[0].split(",").map(header => header.trim());
-            const data = rows.slice(1).map(row => {
-                const values = row.split(",").map(value => value.trim());
-                return headers.reduce((acc, header, index) => {
-                    acc[header] = values[index];
-                    return acc;
-                }, {});
-            });
-            return data;
-        }
+      // 데이터 배열로 변환
+      return rows.map(row => {
+        return headers.reduce((obj, header, i) => {
+          obj[header.trim()] = row[i] ? row[i].trim() : '';
+          return obj;
+        }, {});
+      });
+    }
 
-        // Create links from parsed CSV data
-        function createLinks(data) {
-            const container = document.getElementById("link-container");
-            data.forEach(item => {
-                const link = document.createElement("a");
-                link.href = item.URL;
-                link.textContent = item["제목"];
-                link.className = "link";
-                link.target = "_blank"; // Opens the link in a new tab
-                container.appendChild(link);
-            });
-        }
-    </script>
+    // HTML에 데이터 렌더링
+    async function renderStores() {
+      const stores = await loadCSV();
+      const container = document.getElementById('store-container');
+
+      stores.forEach(store => {
+        const storeDiv = document.createElement('div');
+        storeDiv.className = 'store';
+        storeDiv.innerHTML = `
+          <button onclick="window.open('${store['URL']}', '_blank')">
+            ${store['제목']}
+          </button>
+          <p class="benefit">${store['혜택']}</p>
+        `;
+        container.appendChild(storeDiv);
+      });
+    }
+
+    // 초기 렌더링
+    renderStores();
+  </script>
 </body>
 </html>
