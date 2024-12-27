@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>엄마마음</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .link-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .link {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #0073e6;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .link:hover {
+            background-color: #005bb5;
+        }
+    </style>
+</head>
+<body>
+    <h1>내가 나라서 정말 좋아</h1>
+    <div id="link-container" class="link-container">
+        <!-- Links will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Path to your CSV file
+        const csvFilePath = "./bookstore.csv";
+
+        // Fetch and process the CSV file
+        fetch(csvFilePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(csvData => {
+                const parsedData = parseCSV(csvData);
+                createLinks(parsedData);
+            })
+            .catch(error => {
+                console.error("Error loading the CSV file:", error);
+            });
+
+        // Parse CSV data
+        function parseCSV(csv) {
+            const rows = csv.split("\n").map(row => row.trim()).filter(row => row);
+            const headers = rows[0].split(",").map(header => header.trim());
+            const data = rows.slice(1).map(row => {
+                const values = row.split(",").map(value => value.trim());
+                return headers.reduce((acc, header, index) => {
+                    acc[header] = values[index];
+                    return acc;
+                }, {});
+            });
+            return data;
+        }
+
+        // Create links from parsed CSV data
+        function createLinks(data) {
+            const container = document.getElementById("link-container");
+            data.forEach(item => {
+                const link = document.createElement("a");
+                link.href = item.URL;
+                link.textContent = item["제목"];
+                link.className = "link";
+                link.target = "_blank"; // Opens the link in a new tab
+                container.appendChild(link);
+            });
+        }
+    </script>
+</body>
+</html>
