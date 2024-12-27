@@ -50,6 +50,11 @@
       border-color: #333;
     }
 
+    .store button span {
+      font-size: 14px;
+      font-weight: regular;
+    }
+
     .benefit {
       font-size: 14px;
       margin-top: 10px;
@@ -109,7 +114,7 @@
         storeDiv.className = 'store';
         storeDiv.innerHTML = `
           <button onclick="window.open('${store['URL']}', '_blank')">
-            ${store['제목']} (10%할인)
+            ${store['제목']} <span class="sales">(10%할인)</span>
           </button>
           <p class="benefit">${store['혜택']}</p>
         `;
