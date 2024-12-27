@@ -109,9 +109,9 @@
         storeDiv.className = 'store';
         storeDiv.innerHTML = `
           <button onclick="window.open('${store['URL']}', '_blank')">
-            ${store['제목']}
+            ${store['제목']} (10%할인)
           </button>
-          <p class="benefit">${store['혜택']} (10%할인)</p>
+          <p class="benefit">${store['혜택']}</p>
         `;
         container.appendChild(storeDiv);
       });
