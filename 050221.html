@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>현명한 부모는 적당한 거리를 둔다 | 길벗</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+    }
+
+    #store-container {
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .store {
+      margin-bottom: 20px;
+    }
+
+    .store button {
+      display: block;
+      width: 100%;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 15px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .store button:hover {
+      background-color: #333;
+      color: #fff;
+      border-color: #333;
+    }
+
+    .store button span {
+      font-size: 12px;
+      font-weight: regular;
+    }
+
+    .benefit {
+      font-size: 14px;
+      margin-top: 10px;
+      color: #666;
+      display: block;
+    }
+
+    h1 img {
+      display: block;
+      margin: 0 auto;
+    }
+
+    #infor{
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      padding-left: 15px;
+      padding-right: 15px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F3ZLWQ6ES4"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-F3ZLWQ6ES4');
+  </script>
+</head>
+<body>
+  <h1>현명한 부모는 적당한 거리를 둔다<br />
+  <img src="./img/050221_resize.png" width="200px" /></h1>
+  <div id="store-container"></div>
+
+  <script>
+    // CSV 파일 경로
+    const csvFilePath = './050221.csv';
+
+    // CSV 데이터 파싱 함수
+    async function loadCSV() {
+      const response = await fetch(csvFilePath);
+      const text = await response.text();
+      const rows = text.split('\n').map(row => row.split(','));
+      const headers = rows.shift(); // 첫 번째 줄은 헤더
+
+      // 데이터 배열로 변환
+      return rows.map(row => {
+        return headers.reduce((obj, header, i) => {
+          obj[header.trim()] = row[i] ? row[i].trim() : '';
+          return obj;
+        }, {});
+      });
+    }
+
+    // HTML에 데이터 렌더링
+    async function renderStores() {
+      const stores = await loadCSV();
+      const container = document.getElementById('store-container');
+
+      stores.forEach(store => {
+        const storeDiv = document.createElement('div');
+        storeDiv.className = 'store';
+        storeDiv.innerHTML = `
+          <button onclick="window.open('${store['URL']}', '_blank')">
+            ${store['제목']}
+          </button>
+          <p class="benefit">${store['혜택']}</p>
+        `;
+        container.appendChild(storeDiv);
+      });
+    }
+
+    // 초기 렌더링
+    renderStores();
+  </script>
+</body>
+</html>
